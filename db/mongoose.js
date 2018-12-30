@@ -4,7 +4,7 @@ const username = process.env.MONGO_USER
 const password = process.env.MONGO_PASS
 const encodedpass = encodeURIComponent(password)
 const server = process.env.MONGO_SERVER
-const database = process.env.MONGO_COLLECTION
+const database = process.env.MONGO_DATABASE
 const url = `mongodb://${username}:${encodedpass}@${server}/${database}`
 
 mongoose.set('useNewUrlParser', true)

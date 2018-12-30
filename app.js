@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const express = require('express')
-const mongoose = require('mongoose')
+const mongoose = require('./db/mongoose')
 const cookieParser = require('cookie-parser')
 const helmet = require('helmet')
 const methodOverride = require('method-override')
@@ -10,7 +10,7 @@ const app = express()
 const { PORT } = process.env
 
 const userRoutes = require('./routes/user-routes')
-const mealRoutes = require('./routes/meal-routes')
+// const mealRoutes = require('./routes/meal-routes')
 
 app.set('view engine', 'ejs')
 
@@ -19,10 +19,9 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(express.static('public'))
 app.use(methodOverride('_method'))
-app.use(express.static('public'))
 
 app.use(userRoutes)
-app.use(mealRoutes)
+// app.use(mealRoutes)
 
 app.get('/', (req, res) => res.render('home'))
 
@@ -34,7 +33,10 @@ app.use((req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-  res.status(500).send(err.message)
+  res.status(500).render('error', {
+    statusCode: '500',
+    errorMessage: err.message
+  })
 })
 
 app.listen(PORT)
