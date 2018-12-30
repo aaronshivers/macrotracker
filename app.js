@@ -27,7 +27,10 @@ app.use(mealRoutes)
 app.get('/', (req, res) => res.render('home'))
 
 app.use((req, res, next) => {
-  res.status(404).send('Sorry, we cannot find that!')
+  res.status(404).render('error', {
+    statusCode: '404',
+    errorMessage: 'Sorry, we cannot find that!'
+  })
 })
 
 app.use((err, req, res, next) => {
