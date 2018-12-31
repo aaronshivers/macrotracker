@@ -151,6 +151,53 @@ describe('GET /login', () => {
   })
 })
 
+describe('POST /login', () => {
+  it('should login user and create a token', (done) => {
+    const { email, password } = users[0]
+    request(app)
+      .post('/login')
+      .type('form')
+      .send(`email=${email}`)
+      .send(`password=${password}`)
+      .expect(302)
+      .expect((res) => {
+        expect(res.header['set-cookie']).toBeTruthy()
+      })
+      .end(done)
+  })
+
+  it('should NOT login user if email is not in the database', (done) => {
+    const { email, password } = users[2]
+    request(app)
+      .post('/login')
+      .type('form')
+      .send(`email=${email}`)
+      .send(`password=${password}`)
+      .expect(404)
+      .expect((res) => {
+        expect(res.body._id).toBeFalsy()
+        expect(res.header['set-cookie']).toBeFalsy()
+      })
+      .end(done)
+  })
+
+  it('should NOT login user if password is incorrect', (done) => {
+    const { email } = users[0]
+    const { password } = users[2]
+    request(app)
+      .post('/login')
+      .type('form')
+      .send(`email=${email}`)
+      .send(`password=${password}`)
+      .expect(401)
+      .expect((res) => {
+        expect(res.body._id).toBeFalsy()
+        expect(res.header['set-cookie']).toBeFalsy()
+      })
+      .end(done)
+  })
+})
+
 // GET /logout
 describe('GET /logout', () => {
   it('should logout user and delete auth token', (done) => {

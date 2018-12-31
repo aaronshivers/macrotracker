@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 const User = require('../models/user-model')
 const validatePassword = require('../middleware/validate-password')
@@ -60,6 +61,33 @@ router.get('/profile', authenticateUser, (req, res) => {
 // GET /login
 router.get('/login', (req, res) => {
   res.render('login')
+})
+
+// POST /login
+router.post('/login', (req, res) => {
+  const { email, password } = req.body
+
+  User.findOne({ email }).then((user) => {
+    if (user) {
+      bcrypt.compare(password, user.password, (err, hash) => {
+        if (hash) {
+          createToken(user).then((token) => {
+            res.cookie('token', token, cookieExpiration).status(200).redirect(`/profile`)
+          })
+        } else {
+          res.status(401).render('error', {
+            statusCode: '401',
+            errorMessage: 'Please check your login credentials, and try again.'
+          })
+        }
+      })
+    } else {
+      res.status(404).render('error', {
+        statusCode: '401',
+        errorMessage: 'Sorry, we could not find that user in our database.'
+      })
+    }
+  }).catch(err => res.status(401).send('Please check your login credentials, and try again.'))
 })
 
 // GET /logout
