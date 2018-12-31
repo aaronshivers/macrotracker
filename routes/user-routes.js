@@ -49,7 +49,10 @@ router.get('/profile', authenticateUser, (req, res) => {
     if (user) {
       res.render('profile', { user })
     } else {
-      res.status(404).send('Sorry, that user id is not in our database.')
+      res.status(401).render('error', {
+        statusCode: '401',
+        errorMessage: 'Sorry, you must be logged in to view this page.'
+      })
     }
   })
 })

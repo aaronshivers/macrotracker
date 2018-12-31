@@ -2,6 +2,7 @@ const expect = require('expect')
 const request = require('supertest')
 
 const app = require('./../app')
+const User = require('../models/user-model')
 const { users, populateUsers, tokens } = require('./seed')
 
 beforeEach(populateUsers)
@@ -46,3 +47,96 @@ describe('GET /profile', () => {
   })
 })
 
+// POST /users
+describe('POST /users', () => {
+
+  it('should create a new user, and redirect to /profile', (done) => {
+    const { email, password } = users[2]
+
+    request(app)
+      .post('/users')
+      .type('form')
+      .send(`email=${email}`)
+      .send(`password=${password}`)
+      .expect(201)
+      .expect((res) => {
+        expect(res.text).toContain(email)
+        expect(res.header).toHaveProperty('set-cookie')
+        // expect(res.header['set-cookie']).toBeTruthy()
+      })
+      .end((err) => {
+        if (err) {
+          return done(err)
+        } else {
+          User.findOne({email}).then((user) => {
+            expect(user).toBeTruthy()
+            expect(user.email).toEqual(email)
+            expect(user.password).not.toEqual(password)
+            done()
+          }).catch(err => done(err))
+        }
+      })
+  })
+
+  it('should NOT create a duplicate user', (done) => {
+    const { email, password } = users[0]
+
+    request(app)
+      .post('/users')
+      .type('form')
+      .send(`email=${email}`)
+      .send(`password=${password}`)
+      .expect(400)
+      .expect((res) => {
+        expect(res.header['set-cookie']).toBeFalsy()
+      })
+      .end(done)
+  })
+
+  it('should NOT create a user with an invalid email', (done) => {
+    const { email, password } = users[3]
+
+    request(app)
+      .post('/users')
+      .type('form')
+      .send(`email=${email}`)
+      .send(`password=${password}`)
+      .expect(400)
+      .expect((res) => {
+        expect(res.header['set-cookie']).toBeFalsy()
+      })
+      .end((err) => {
+        if (err) {
+          return done(err)
+        } else {
+          User.findOne({email}).then((user) => {
+            expect(user).toBeFalsy()
+            done()
+          }).catch(err => done(err))
+        }
+      })
+  })
+
+  it('should NOT create a user with an invalid password', (done) => {
+    const { email, password } = users[4]
+    request(app)
+      .post('/users')
+      .type('form')
+      .send(`email=${email}`)
+      .send(`password=${password}`)
+      .expect(400)
+      .expect((res) => {
+        expect(res.header['set-cookie']).toBeFalsy()
+      })
+      .end((err) => {
+        if (err) {
+          return done(err)
+        } else {
+          User.findOne({email}).then((user) => {
+            expect(user).toBeFalsy()
+            done()
+          }).catch(err => done(err))
+        }
+      })
+  })
+})
