@@ -22,6 +22,11 @@ router.post('/users', (req, res) => {
   const newUser = { email, password }
   const user = new User(newUser)
 
+  if (!password || !email) return res.status(400).render('error', {
+    statusCode: '400',
+    errorMessage: 'You must provide an email, and a password.'
+  })
+
   if (validatePassword(newUser.password)) {
     user.save().then((user) => {
       createToken(user).then((token) => {

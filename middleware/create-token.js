@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken')
 
 const createToken = (user) => {
-  console.log('hello')
   const payload = { _id: user._id, admin: user.admin }
   const secret = process.env.JWT_SECRET
   const options = { expiresIn: '1d' }

@@ -4,7 +4,7 @@
   "description": "An application for tracking your nutritional intake",
   "main": "app.js",
   "scripts": {
-    "test": "node test/test.js"
+    "test": "mocha test/test.js"
   },
   "repository": {
     "type": "git",
