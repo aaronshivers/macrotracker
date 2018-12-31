@@ -140,3 +140,18 @@ describe('POST /users', () => {
       })
   })
 })
+
+// GET /logout
+describe('GET /logout', () => {
+  it('should logout user and delete auth token', (done) => {
+    const cookie = `token=${tokens[0]}`
+    request(app)
+      .get('/logout')
+      .set('Cookie', cookie)
+      .expect(302)
+      .expect((res) => {
+        expect(res.header['set-cookie']).toEqual(["token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"])
+      })
+      .end(done)
+  })
+})
