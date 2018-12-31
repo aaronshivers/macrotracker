@@ -212,3 +212,42 @@ describe('GET /logout', () => {
       .end(done)
   })
 })
+
+// DELETE /users/:id
+describe('DELETE /users/:id', () => {
+  
+  it('should delete the specified user', (done) => {
+    const { _id } = users[0]
+    const cookie = `token=${tokens[0]}`
+
+    request(app)
+      .delete(`/users/${ _id }`)
+      .set('Cookie', cookie)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body._id).toEqual(_id.toString())
+      })
+      .end((err) => {
+        if (err) {
+          return done(err)
+        } else {
+          User.findById(_id).then((user) => {
+            expect(user).toBeFalsy()
+            done()
+          }).catch(err => done(err))
+        }
+      })
+  })
+
+  it('should return 404 if the specified user is not found', (done) => {
+    const { _id } = users[2]
+    const cookie = `token=${tokens[0]}`
+
+    request(app)
+      .delete(`/users/${ _id }`)
+      .set('Cookie', cookie)
+      .expect(404)
+      .end(done)
+  })
+})
+
