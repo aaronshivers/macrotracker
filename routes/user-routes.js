@@ -57,6 +57,11 @@ router.get('/profile', authenticateUser, (req, res) => {
   })
 })
 
+// GET /login
+router.get('/login', (req, res) => {
+  res.render('login')
+})
+
 // GET /logout
 router.get('/logout', (req, res) => {
   res.clearCookie('token').redirect(`/`)

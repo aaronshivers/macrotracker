@@ -141,6 +141,16 @@ describe('POST /users', () => {
   })
 })
 
+// GET /login
+describe('GET /login', () => {
+  it('should respond with 200', (done) => {
+    request(app)
+      .get('/')
+      .expect(200)
+      .end(done)
+  })
+})
+
 // GET /logout
 describe('GET /logout', () => {
   it('should logout user and delete auth token', (done) => {
