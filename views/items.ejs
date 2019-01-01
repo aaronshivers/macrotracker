@@ -1,0 +1,43 @@
+<% include partials/top %>
+
+<div id="homeContainer" class="container">
+
+  <h1 class="text-center">Items List</h1>
+
+  <a class="btn btn-lg btn-outline-primary btn-block mb-3" href="/items/new">New Item</a>
+
+  <table class="table">
+    
+    <thead class="table-primary">
+      
+      <tr>
+        
+        <th>Title</th>
+        <th>Calories</th>
+        <th>Fat</th>
+        <th>Carbs</th>
+        <th>Protien</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+      <% items.forEach((item) => { %>
+      <tr>
+        
+        <th><a href="/items/<%= item._id %>/edit"><%= item.title %></a></th>
+        <th><%= item.calories %></th>
+        <th><%= item.fat %></th>
+        <th><%= item.carbs %></th>
+        <th><%= item.protien %></th>
+
+      </tr>
+      <% }) %>
+    </tbody>
+
+  </table>
+
+</div>
+
+<% include partials/bottom %>

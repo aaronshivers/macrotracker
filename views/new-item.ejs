@@ -1,0 +1,40 @@
+<% include partials/top %>
+
+<div class="container">
+
+  <h1 class="text-center">New Item Form</h1>
+
+  <form class="form" action="/items" method="POST">
+    
+    <div class="form-group">
+      <label for="title">Name</label>
+      <input class="form-control" type="title" name="title" placeholder="Enter Item..." required>
+    </div>
+
+    <div class="form-group">
+      <label for="calories">Calories</label>
+      <input class="form-control" type="number" name="calories" placeholder="Enter Calories..." required>
+    </div>
+
+    <div class="form-group">
+      <label for="fat">Fat</label>
+      <input class="form-control" type="number" name="fat" placeholder="Enter Fat..." required>
+    </div>
+
+    <div class="form-group">
+      <label for="carbs">Carbs</label>
+      <input class="form-control" type="number" name="carbs" placeholder="Enter Carbs..." required>
+    </div>
+
+    <div class="form-group">
+      <label for="protien">Protien</label>
+      <input class="form-control" type="number" name="protien" placeholder="Enter Protien..." required>
+    </div>
+
+    <button class="btn btn-lg btn-outline-primary btn-block">Create Item</button>
+
+  </form>
+
+</div>
+
+<% include partials/bottom %>
