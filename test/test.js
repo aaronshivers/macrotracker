@@ -223,10 +223,7 @@ describe('DELETE /users/:id', () => {
     request(app)
       .delete(`/users/${ _id }`)
       .set('Cookie', cookie)
-      .expect(200)
-      .expect((res) => {
-        expect(res.body._id).toEqual(_id.toString())
-      })
+      .expect(302)
       .end((err) => {
         if (err) {
           return done(err)
@@ -247,6 +244,105 @@ describe('DELETE /users/:id', () => {
       .delete(`/users/${ _id }`)
       .set('Cookie', cookie)
       .expect(404)
+      .end(done)
+  })
+})
+
+// PATCH /users
+describe('PATCH /users/:id', () => {
+  it('should update the specified user', (done) => {
+    const { _id } = users[0]
+    const { email, password } = users[2]
+    const cookie = `token=${tokens[0]}`
+
+    request(app)
+      .patch(`/users/${ _id }`)
+      .set('Cookie', cookie)
+      .type('form')
+      .send(`email=${email}`)
+      .send(`password=${password}`)
+      .expect(302)
+      .expect((res) => {
+        // expect(res.text).toContain(_id.toString())
+        // expect(res.text).toContain(email)
+      })
+      .end((err) => {
+        if (err) {
+          return done(err)
+        } else {
+          User.findById(_id).then((user) => {
+            expect(user).toBeTruthy()
+            expect(user._id).toEqual(_id)
+            expect(user.email).toEqual(email)
+            expect(user.password).not.toEqual(password)
+            done()
+          }).catch(err => done(err))
+        }
+      })
+  })
+
+  it('should NOT create a duplicate user', (done) => {
+    const { _id } = users[0]
+    const { email, password } = users[1]
+    const cookie = `token=${tokens[0]}`
+
+    request(app)
+      .patch(`/users/${ _id }`)
+      .set('Cookie', cookie)
+      .type('form')
+      .send(`email=${email}`)
+      .send(`password=${password}`)
+      .expect(400)
+      .end((err) => {
+        if (err) {
+          return done(err)
+        } else {
+          User.findById(_id).then((user) => {
+            expect(user._id).toEqual(_id)
+            expect(user.email).not.toEqual(email)
+            done()
+          }).catch(err => done(err))
+        }
+      })
+  })
+
+  it('should NOT update a user with an invalid email', (done) => {
+    const { _id } = users[0]
+    const { email, password } = users[3]
+    const cookie = `token=${tokens[0]}`
+
+    request(app)
+      .patch(`/users/${ _id }`)
+      .set('Cookie', cookie)
+      .type('form')
+      .send(`email=${email}`)
+      .send(`password=${password}`)
+      .expect(400)
+      .end((err) => {
+        if (err) {
+          return done(err)
+        } else {
+          User.findById(_id).then((user) => {
+            expect(user._id).toEqual(_id)
+            expect(user.email).not.toEqual(email)
+            done()
+          }).catch(err => done(err))
+        }
+      })
+  })
+
+  it('should NOT update a user with an invalid password', (done) => {
+    const { _id } = users[0]
+    const { email, password } = users[4]
+    const cookie = `token=${tokens[0]}`
+
+    request(app)
+      .patch(`/users/${ _id }`)
+      .set('Cookie', cookie)
+      .type('form')
+      .send(`email=${email}`)
+      .send(`password=${password}`)
+      .expect(400)
       .end(done)
   })
 })
