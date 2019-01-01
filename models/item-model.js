@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-const todoSchema = new Schema({
+const itemSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -39,6 +39,6 @@ const todoSchema = new Schema({
   }
 })
 
-const Todo = mongoose.model('Todo', todoSchema)
+const Item = mongoose.model('Item', itemSchema)
 
-module.exports = Todo
+module.exports = Item
