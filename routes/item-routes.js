@@ -23,10 +23,9 @@ router.post('/items', authenticateUser, (req, res) => {
   const { token } = req.cookies
 
   verifyCreator(token).then((creator) => {
-    const { title, completed } = req.body
-    console.log(token)
-    console.log(creator)
-    const item = new Item({ title, completed, creator })
+    const { title, calories, fat, carbs, protien } = req.body
+    const newItem = { title, calories, fat, carbs, protien }
+    const item = new Item(newItem)
   
     item.save().then(() => {
       res.redirect('/items')
@@ -48,12 +47,13 @@ router.get('/items/:id/edit', authenticateUser, (req, res) => {
 router.patch('/items/:id', authenticateUser, (req, res) => {
   const { token } = req.cookies
   const _id = req.params.id
-  const update = { title, completed } = req.body
+  const { title, calories, fat, carbs, protien } = req.body
+  const updatedItem = { title, calories, fat, carbs, protien }
 
   verifyCreator(token).then((creator) => {
     const conditions = { _id, creator }
 
-    Item.findOneAndUpdate(conditions, update).then(() => {
+    Item.findOneAndUpdate(conditions, updatedItem).then(() => {
       res.redirect('/items')
     })
   })
