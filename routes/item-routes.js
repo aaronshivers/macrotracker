@@ -24,7 +24,7 @@ router.post('/items', authenticateUser, (req, res) => {
 
   verifyCreator(token).then((creator) => {
     const { title, calories, fat, carbs, protien } = req.body
-    const newItem = { title, calories, fat, carbs, protien }
+    const newItem = { title, calories, fat, carbs, protien, creator }
     const item = new Item(newItem)
   
     item.save().then(() => {
@@ -47,8 +47,8 @@ router.get('/items/:id/edit', authenticateUser, (req, res) => {
 router.patch('/items/:id', authenticateUser, (req, res) => {
   const { token } = req.cookies
   const _id = req.params.id
-  const { title, calories, fat, carbs, protien } = req.body
-  const updatedItem = { title, calories, fat, carbs, protien }
+  const { title, calories, fat, carbs, protien, favorite } = req.body
+  const updatedItem = { title, calories, fat, carbs, protien, favorite }
 
   verifyCreator(token).then((creator) => {
     const conditions = { _id, creator }
