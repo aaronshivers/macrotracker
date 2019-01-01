@@ -83,7 +83,10 @@ router.patch('/users/:id', authenticateUser, (req, res) => {
         if (user) {
           res.status(201).redirect(`/profile`)
         } else {
-          res.status(404).send('Sorry, that user Id was not found in our database.')
+          res.render('error', {
+            statusCode: '404',
+            errorMessage: 'Sorry, that user Id was not found in our database.'
+          })
         }
       }).catch(err => res.status(400).send(err.message))
     })
