@@ -10,7 +10,7 @@ const app = express()
 const { PORT } = process.env
 
 const userRoutes = require('./routes/user-routes')
-// const mealRoutes = require('./routes/meal-routes')
+const itemRoutes = require('./routes/item-routes')
 
 app.set('view engine', 'ejs')
 
@@ -21,7 +21,7 @@ app.use(express.static('public'))
 app.use(methodOverride('_method'))
 
 app.use(userRoutes)
-// app.use(mealRoutes)
+app.use(itemRoutes)
 
 app.get('/', (req, res) => res.render('home'))
 
